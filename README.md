@@ -1,13 +1,10 @@
 # Rofi web search
 
-[![Demo](./demo/screencast.gif)](https://youtu.be/2o1t_vuU6LU)
-
 ## General description
 
 This simple script is aimed to have something like Spotlight on OSX to make a
 web search in a minimalistic window manager using
-[Rofi](https://github.com/davatorium/rofi). Personally I use
-[i3-gaps](https://github.com/Airblader/i3) but any window manger is ok.
+[Rofi](https://github.com/davatorium/rofi).
 
 The script provides you the ability to ask suggestions to the search engine
 before actually open the browser. Just close your search string with bang (`!`)
@@ -57,9 +54,9 @@ Just open the script and edit the necessary variables:
 * st
 * gnome-terminal
 
-In i3 you can bind the script in the usual way, for example this is my
-configuration:
+##Launch 
+Launch with (replace SCRIPT-LOCATION with the path to the script):
 
 ```bash
-bindsym --release $mod+x exec --no-startup-id rofi -lines 10 -padding 0 -show search -modi search:~/bin/rofi-web-search.py -i -p "Search: "
+rofi -lines 10 -padding 0 -show search -modi search:SCRIPT-LOCATION -i -p "Search: "
 ```

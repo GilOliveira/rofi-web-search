@@ -2,13 +2,16 @@
 
 ## General description
 
-This simple script is aimed to have something like Spotlight on OSX to make a
-web search in a minimalistic window manager using
-[Rofi](https://github.com/davatorium/rofi).
+This is a fork of [pdonadeo's](https://github.com/pdonadeo)
+[rofi-web-search](https://github.com/pdonadeo/rofi-web-search)
+with added browser and search engine support.
+
+The script allows [Rofi](https://github.com/davatorium/rofi) to be used as a search engine
+when launched with a specific launch script.
 
 The script provides you the ability to ask suggestions to the search engine
 before actually open the browser. Just close your search string with bang (`!`)
-and type `ENTER`.
+and type `ENTER`. This ability is not available in all search engines.
 
 Suggestions will be listed by Rofi and you can select one of them or refine your
 search using `CTRL+ENTER` (this is the standard Rofi binding) to copy the
@@ -20,8 +23,8 @@ optionally closing it with a `!` to get suggestions, as usual.
 
 ## Requirements
 
-The only requirements are Rofi (of course...) and Python 3. No external packages
-or libraries are required.
+* Rofi
+* Python 3.*
 
 ## Configuration
 
@@ -61,5 +64,3 @@ Launch with (replace SCRIPT-LOCATION with the path to the script):
 ```bash
 rofi -lines 10 -padding 0 -show search -modi search:SCRIPT-LOCATION -i -p "Search: "
 ```
-
-_This script contains code forked from [pdonadeo](https://github.com/pdonadeo/rofi-web-search)_

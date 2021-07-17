@@ -40,13 +40,14 @@ Just open the script and edit the necessary variables:
 
 * google
 * duckduckgo
+* brave-search
 
 `BROWSER`
 
 * chrome
 * firefox
 * chromium
-* brave
+* brave-beta
 * lynx
 
 `TERMINAL`
@@ -54,9 +55,11 @@ Just open the script and edit the necessary variables:
 * st
 * gnome-terminal
 
-##Launch 
+## Launch 
 Launch with (replace SCRIPT-LOCATION with the path to the script):
 
 ```bash
 rofi -lines 10 -padding 0 -show search -modi search:SCRIPT-LOCATION -i -p "Search: "
 ```
+
+_This script contains code forked from [pdonadeo](https://github.com/pdonadeo/rofi-web-search)_

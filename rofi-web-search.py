@@ -17,8 +17,8 @@ import html
 ################################################################################
 #####                      C O N F I G U R A T I O N                      ######
 ################################################################################
-SEARCH_ENGINE = 'google'            # or 'duckduckgo'
-BROWSER = 'chrome'                  # or 'firefox', 'chromium', 'brave', 'lynx'
+SEARCH_ENGINE = 'brave-search'            # or 'duckduckgo'
+BROWSER = 'brave-beta'                  # or 'firefox', 'chromium', 'brave', 'lynx'
 TERMINAL = ['gnome-terminal', '--'] # or ['st', '-e'] or something like that
 ################################################################################
 
@@ -28,6 +28,7 @@ CONFIG = {
         'firefox' : ['firefox'],
         'chromium' : ['chromium-browser'],
         'brave' : ['brave-browser'],
+        'brave-beta' : ['brave-beta'],
         'lynx' : TERMINAL + ['lynx']
     },
     'USER_AGENT' : {
@@ -35,21 +36,26 @@ CONFIG = {
         'firefox' : 'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0',
         'chromium' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/76.0.3809.100 Chrome/76.0.3809.100 Safari/537.36',
         'brave' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+        'brave-beta' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
         'lynx' : 'Lynx/2.8.9rel.1 libwww-FM/2.14 SSL-MM/1.4.1 OpenSSL/1.1.1d'
     },
     'SEARCH_ENGINE_NAME' : {
         'google' : 'Google',
-        'duckduckgo' : 'DuckDuckGo'
+        'duckduckgo' : 'DuckDuckGo',
+        'brave-search' : 'Brave Search'
     },
     'SEARCH_URL' : {
         'google' : 'https://www.google.com/search?q=',
-        'duckduckgo' : 'https://duckduckgo.com/?q='
+        'duckduckgo' : 'https://duckduckgo.com/?q=',
+        'brave-search' : 'https://search.brave.com/search?q='
     },
     'SUGGESTION_URL' : {
         'google' : 'https://www.google.com/complete/search?',
         'duckduckgo' : 'https://duckduckgo.com/ac/?'
-    }
+    },
 }
+
+SUGGESTIONS_INCOMPATIBLE = ('brave-search')
 
 def cleanhtml(txt):
     return re.sub(r'<.*?>', '', txt)
@@ -84,7 +90,7 @@ def fetch_suggestions(search_string):
         reply_data = gzip.decompress(urllib.request.urlopen(req).read()).split(b'\n')[1]
         reply_data = json.loads(reply_data)
         return [ cleanhtml(res[0]).strip() for res in reply_data[0] ]
-    else:   # 'duckduckgo'
+    elif SEARCH_ENGINE == 'duckduckgo':   # 'duckduckgo'
         if search_string.startswith('!'):
             bang_search = True
             search_string = search_string.lstrip('!')
@@ -120,7 +126,7 @@ def fetch_suggestions(search_string):
 def main():
     search_string = html.unescape((' '.join(sys.argv[1:])).strip())
 
-    if search_string.endswith('!'):
+    if (search_string.endswith('!')) and (SEARCH_ENGINE not in SUGGESTIONS_INCOMPATIBLE):
         search_string = search_string.rstrip('!').strip()
         results = fetch_suggestions(search_string)
         for r in results:
@@ -128,6 +134,8 @@ def main():
     elif search_string == '':
         print('!!-- Type something and search it with %s' % CONFIG['SEARCH_ENGINE_NAME'][SEARCH_ENGINE])
         print('!!-- Close your search string with "!" to get search suggestions')
+    elif (search_string.endswith('!')) and (SEARCH_ENGINE in SUGGESTIONS_INCOMPATIBLE):
+        print('Suggestions from', CONFIG['SEARCH_ENGINE_NAME'][SEARCH_ENGINE], 'are not supported.')
     else:
         url = CONFIG['SEARCH_URL'][SEARCH_ENGINE] + urllib.parse.quote_plus(search_string)
         sp.Popen(CONFIG['BROWSER_PATH'][BROWSER] + [url], stdout=sp.DEVNULL, stderr=sp.DEVNULL, shell=False)
